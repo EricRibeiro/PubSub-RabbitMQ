@@ -23,8 +23,4 @@ public class Demanda implements Serializable {
     @NonNull
     @Getter @Setter
     private Pessoa cliente;
-
-    public String getNmFilaResposta() {
-        return this.cliente.toString();
-    }
 }

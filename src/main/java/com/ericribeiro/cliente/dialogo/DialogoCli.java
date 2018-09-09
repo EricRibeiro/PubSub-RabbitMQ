@@ -6,7 +6,7 @@ import javax.swing.*;
 
 public abstract class DialogoCli {
 
-    public static String exibirOpcoesAtendimento() {
+    public static String exibirOpcoesAtendimento() throws NullPointerException {
         Object[] opcoes = {"NOVA DEMANDA", "RESPOSTA DE DEMANDAS ANTERIORES"};
 
         Object opcao = JOptionPane.showInputDialog(null,

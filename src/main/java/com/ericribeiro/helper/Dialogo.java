@@ -14,7 +14,7 @@ public abstract class Dialogo {
         JOptionPane.showMessageDialog(null, mensagem, "Informação", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static Pessoa getDadosPessoa() {
+    public static Pessoa getDadosPessoa() throws IllegalArgumentException {
         JTextField jTextNome = new JTextField();
         JTextField jTextCelular = new JTextField();
 
@@ -27,10 +27,14 @@ public abstract class Dialogo {
 
         int option = JOptionPane.showConfirmDialog(null, message, "Inserir Dados", JOptionPane.OK_CANCEL_OPTION);
 
-        if (option == JOptionPane.OK_OPTION) {
-            String nome = jTextNome.getText();
-            String celular = jTextCelular.getText();
+        String nome = jTextNome.getText();
+        String celular = jTextCelular.getText();
+
+        if (option == JOptionPane.OK_OPTION && !nome.isEmpty() && !celular.isEmpty()) {
             pessoa = new Pessoa(nome, celular);
+
+        } else {
+            throw new IllegalArgumentException();
         }
 
         return pessoa;

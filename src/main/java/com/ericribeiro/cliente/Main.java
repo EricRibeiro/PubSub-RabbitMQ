@@ -8,21 +8,35 @@ import com.ericribeiro.model.Pessoa;
 public class Main {
 
     public static void main(String[] argv) {
-        Pessoa pessoa = Dialogo.getDadosPessoa();
-        String opcao = DialogoCli.exibirOpcoesAtendimento();
+        try {
+            Pessoa pessoa = Dialogo.getDadosPessoa();
+            String opcao = DialogoCli.exibirOpcoesAtendimento();
 
-        switch (opcao) {
-            case "NOVA DEMANDA":
-                PubDemandaCli.abrirDemanda(pessoa);
-                break;
+            switch (opcao) {
+                case "NOVA DEMANDA":
+                    PubDemandaCli.abrirDemanda(pessoa);
+                    break;
 
-            case "RESPOSTA DE DEMANDAS ANTERIORES":
-                System.out.println("Working on it.");
-                break;
+                case "RESPOSTA DE DEMANDAS ANTERIORES":
+                    System.out.println("Working on it.");
+                    break;
 
-            default:
-                System.exit(-1);
-                break;
+                default:
+                    System.exit(-1);
+                    break;
+            }
+
+        } catch (NullPointerException e) {
+            String mensagem = "O programa será encerrado.";
+            Dialogo.exibirMsgErro(mensagem);
+            e.printStackTrace();
+            System.exit(-1);
+
+        } catch (IllegalArgumentException e) {
+            String mensagem = "Os dados inseridos são inválidos, tente novamente.";
+            Dialogo.exibirMsgErro(mensagem);
+            e.printStackTrace();
+            System.exit(255);
         }
     }
 }

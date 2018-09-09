@@ -1,10 +1,10 @@
 package com.ericribeiro.atendente.conexao;
 
 import com.ericribeiro.atendente.publisher.PubDemandaAtend;
-import com.ericribeiro.cliente.publisher.PubDemandaCli;
 import com.ericribeiro.helper.Dialogo;
 import com.ericribeiro.helper.Serializador;
 import com.ericribeiro.model.Demanda;
+import com.ericribeiro.model.Pessoa;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ public abstract class ConexaoAtend {
     private static Connection connection;
     private static String queueName;
 
-    private static void conectar(String host) throws IOException, TimeoutException {
+    private synchronized static void conectar(String host) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);
 
@@ -25,18 +25,23 @@ public abstract class ConexaoAtend {
         channel = connection.createChannel();
     }
 
-    public static void enviarMensagem(Demanda mensagem, String categoria, String exchange, String host) throws IOException, TimeoutException {
+    public synchronized static void enviarMensagem(Demanda mensagem, String filaDeResposta, String exchange, String host) throws IOException, TimeoutException {
         conectar(host);
 
         channel.exchangeDeclare(exchange, BuiltinExchangeType.DIRECT);
 
-        channel.basicPublish(exchange, categoria, null, Serializador.convertToBytes(mensagem));
+        channel.basicPublish(exchange, filaDeResposta, null, Serializador.convertToBytes(mensagem));
+
+        System.out.println(" [x] Resposta da demanda: " + mensagem.toString());
+        System.out.println(" [x] Exchange: " + "'" + exchange + "'");
+        System.out.println(" [x] Fila de resposta: " + filaDeResposta);
+        System.out.println();
 
         channel.close();
         connection.close();
     }
 
-    public static void processarMensagem() throws IOException {
+    public synchronized static void processarMensagem(final Pessoa pessoa) throws IOException {
         Consumer consumer = new DefaultConsumer(channel) {
 
             @Override
@@ -49,9 +54,12 @@ public abstract class ConexaoAtend {
                     System.out.println(" [x] " + demanda.toString());
                     System.out.println();
 
+                    demanda.setAtendente(pessoa);
+
                     PubDemandaAtend.fecharDemanda(demanda);
 
-                    Dialogo.exibirMsgInfo("Aguardando demandas.");
+                    Dialogo.exibirMsgInfo("<html>Clique em <b>'OK'</b> para continuar recebendo demandas em segundo " +
+                            "plano.</html>");
 
                 } catch (ClassNotFoundException e) {
                     String mensagem = "Não foi possível processar a demanda.";
@@ -66,7 +74,8 @@ public abstract class ConexaoAtend {
         channel.basicConsume(queueName, true, consumer);
     }
 
-    public static void receberMensagem(List categorias, String exchange, String host) throws IOException, TimeoutException {
+    public synchronized static void receberMensagem(List categorias, String exchange, String host) throws IOException,
+            TimeoutException {
         conectar(host);
 
         channel.exchangeDeclare(exchange, BuiltinExchangeType.DIRECT);

@@ -17,4 +17,17 @@ public class Pessoa implements Serializable {
     @NonNull
     @Getter @Setter
     private String celular;
+
+    public String getNmFila() {
+        String toString = "";
+        String[] nomes = nome.split(" ");
+
+        for(String n : nomes) {
+            toString += n.toLowerCase() + "_";
+        }
+
+        toString += this.celular;
+
+        return toString;
+    }
 }

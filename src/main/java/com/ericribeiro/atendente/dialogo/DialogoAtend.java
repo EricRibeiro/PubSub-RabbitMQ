@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class DialogoAtend {
 
-    public static List<Categoria> exibirOpcoesAtendimento() {
+    public static List<Categoria> exibirOpcoesAtendimento() throws IllegalArgumentException {
         JCheckBox abertura;
         JCheckBox cancelamento;
         JCheckBox reparo;
@@ -34,7 +34,8 @@ public abstract class DialogoAtend {
                 reparo
         };
 
-        JOptionPane.showMessageDialog(null, message, "Abertura de Atendimento", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, "Abertura de Atendimento",
+                JOptionPane.INFORMATION_MESSAGE);
 
         if(abertura.isSelected()) {
             categorias.add(Categoria.ABERTURA);
@@ -48,18 +49,23 @@ public abstract class DialogoAtend {
             categorias.add(Categoria.REPARO);
         }
 
+        if(!abertura.isSelected() && !cancelamento.isSelected() && !reparo.isSelected()) {
+            throw new IllegalArgumentException();
+        }
+
         return categorias;
     }
 
-    public static Demanda atlzrEstadoDemanda(Demanda demanda) {
+    public static Boolean atlzrEstadoDemanda(Demanda demanda) {
         String mensagem = "<html> A demanda abaixo foi resolvida? " + "<br/>" +
                 "Cliente: " + demanda.getCliente().getNome() + "<br/>" +
                 "Categoria: " + demanda.getCategoria() +
                 "</html>";
 
-        Integer opcao = JOptionPane.showConfirmDialog(null, "A demanda foi resolvida?", "Atendimento",
+        Integer opcao = JOptionPane.showConfirmDialog(null, mensagem, "Atendimento",
                 JOptionPane.YES_NO_OPTION);
-        
+
+        return (opcao == JOptionPane.YES_OPTION);
     }
 
 }
