@@ -17,7 +17,7 @@ public abstract class ConexaoAtend {
     private static Connection connection;
     private static String queueName;
 
-    private synchronized static void conectar(String host) throws IOException, TimeoutException {
+    private static void conectar(String host) throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(host);
 
@@ -25,7 +25,7 @@ public abstract class ConexaoAtend {
         channel = connection.createChannel();
     }
 
-    public synchronized static void enviarMensagem(Demanda mensagem, String filaDeResposta, String exchange, String host) throws IOException, TimeoutException {
+    public static void enviarMensagem(Demanda mensagem, String filaDeResposta, String exchange, String host) throws IOException, TimeoutException {
         conectar(host);
 
         channel.exchangeDeclare(exchange, BuiltinExchangeType.DIRECT);
@@ -41,7 +41,7 @@ public abstract class ConexaoAtend {
         connection.close();
     }
 
-    public synchronized static void processarMensagem(final Pessoa pessoa) throws IOException {
+    public static void processarMensagem(final Pessoa pessoa) throws IOException {
         Consumer consumer = new DefaultConsumer(channel) {
 
             @Override
@@ -74,7 +74,7 @@ public abstract class ConexaoAtend {
         channel.basicConsume(queueName, true, consumer);
     }
 
-    public synchronized static void receberMensagem(List categorias, String exchange, String host) throws IOException,
+    public static void receberMensagem(List categorias, String exchange, String host) throws IOException,
             TimeoutException {
         conectar(host);
 
