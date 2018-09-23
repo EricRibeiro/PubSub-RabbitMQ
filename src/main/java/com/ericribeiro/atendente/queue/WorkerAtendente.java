@@ -7,8 +7,6 @@ import com.ericribeiro.helper.Serializador;
 import com.ericribeiro.model.Demanda;
 import com.ericribeiro.model.Pessoa;
 import com.rabbitmq.client.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,22 +14,16 @@ import java.util.concurrent.TimeoutException;
 
 public class WorkerAtendente {
 
-    @Getter @Setter
     private Channel channel;
 
-    @Getter @Setter
     private Connection connection;
 
-    @Getter @Setter
     private List nmFilas;
 
-    @Getter @Setter
     private String nmExchangeDemandas;
 
-    @Getter @Setter
     private String nmExchangeRespostas;
 
-    @Getter @Setter
     private String nmHost;
 
 

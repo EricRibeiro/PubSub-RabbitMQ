@@ -1,7 +1,5 @@
 package com.ericribeiro.helper;
 
-import com.ericribeiro.model.Pessoa;
-
 import javax.swing.*;
 
 public abstract class Dialogo {

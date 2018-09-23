@@ -5,30 +5,22 @@ import com.ericribeiro.helper.Dialogo;
 import com.ericribeiro.helper.Serializador;
 import com.ericribeiro.model.Demanda;
 import com.rabbitmq.client.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 public class WorkerCliente {
 
-    @Getter @Setter
     private Channel channel;
 
-    @Getter @Setter
     private Connection connection;
 
-    @Getter @Setter
     private String nmExchangeDemandas;
 
-    @Getter @Setter
     private String nmExchangeRespostas;
 
-    @Getter @Setter
     private String nmFila;
 
-    @Getter @Setter
     private String nmHost;
 
     public WorkerCliente(String nmExchangeDemandas, String nmExchangeRespostas, String nmHost) {
@@ -105,5 +97,4 @@ public class WorkerCliente {
         boolean noAck = false;
         channel.basicConsume(nmFila, noAck, consumer);
     }
-
 }

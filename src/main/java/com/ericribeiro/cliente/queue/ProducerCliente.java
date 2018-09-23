@@ -2,30 +2,22 @@ package com.ericribeiro.cliente.queue;
 
 import com.ericribeiro.cliente.utils.LogCliente;
 import com.ericribeiro.helper.Serializador;
-import com.ericribeiro.model.Categoria;
 import com.ericribeiro.model.Demanda;
 import com.rabbitmq.client.*;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 public class ProducerCliente {
 
-    @Getter @Setter
     private Channel channel;
 
-    @Getter @Setter
     private Connection connection;
 
-    @Getter @Setter
     private String nmExchangeDemandas;
 
-    @Getter @Setter
     private String nmExchangeRespostas;
 
-    @Getter @Setter
     private String nmHost;
 
     public ProducerCliente(String nmExchangeDemandas, String nmExchangeRespostas, String nmHost) {

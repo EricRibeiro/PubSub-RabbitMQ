@@ -1,22 +1,20 @@
 package com.ericribeiro.model;
 
-import lombok.*;
-
 import java.io.Serializable;
 
-@AllArgsConstructor
-@ToString
 public class Pessoa implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @NonNull
-    @Getter @Setter
     private String nome;
 
-    @NonNull
-    @Getter @Setter
     private String identificacao;
+
+    @java.beans.ConstructorProperties({"nome", "identificacao"})
+    public Pessoa(String nome, String identificacao) {
+        this.nome = nome;
+        this.identificacao = identificacao;
+    }
 
     public String getNmFila() {
         String toString = "";
@@ -29,5 +27,25 @@ public class Pessoa implements Serializable {
         toString += this.identificacao;
 
         return toString;
+    }
+
+    public String toString() {
+        return "Pessoa(nome=" + this.nome + ", identificacao=" + this.identificacao + ")";
+    }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public String getIdentificacao() {
+        return this.identificacao;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setIdentificacao(String identificacao) {
+        this.identificacao = identificacao;
     }
 }
