@@ -23,6 +23,9 @@ public class WorkerAtendente {
     private Connection connection;
 
     @Getter @Setter
+    private List nmFilas;
+
+    @Getter @Setter
     private String nmExchangeDemandas;
 
     @Getter @Setter
@@ -31,8 +34,6 @@ public class WorkerAtendente {
     @Getter @Setter
     private String nmHost;
 
-    @Getter @Setter
-    private List nmFilas;
 
     public WorkerAtendente(String nmExchangeDemandas, String nmExchangeRespostas, String nmHost) {
         this.nmExchangeDemandas = nmExchangeDemandas;

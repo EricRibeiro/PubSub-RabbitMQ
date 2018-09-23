@@ -11,7 +11,7 @@ public class LogCliente {
     }
 
     public static void imprimirDadosRecepcao(String tipoMensagem, String demanda) {
-        System.out.println(" [x] Demanda recebida.");
+        System.out.println(" [x] Resposta recebida.");
         System.out.println(" [x] Tipo: '" + tipoMensagem + "'");
         System.out.println(" [x] Detalhes: " + demanda);
         System.out.println();

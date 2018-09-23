@@ -1,8 +1,8 @@
 package com.ericribeiro.model;
 
-import java.io.Serializable;
-
 import lombok.*;
+
+import java.io.Serializable;
 
 @AllArgsConstructor
 @ToString

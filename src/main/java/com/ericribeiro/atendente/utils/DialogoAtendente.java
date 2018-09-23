@@ -2,6 +2,7 @@ package com.ericribeiro.atendente.utils;
 
 import com.ericribeiro.model.Categoria;
 import com.ericribeiro.model.Demanda;
+import com.ericribeiro.model.Pessoa;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -9,6 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DialogoAtendente {
+
+    public static Boolean atlzrEstadoDemanda(Demanda demanda) {
+        String mensagem = "<html> A demanda abaixo foi resolvida? " + "<br/>" +
+                "Cliente: " + demanda.getCliente().getNome() + "<br/>" +
+                "Categoria: " + demanda.getCategoria() +
+                "</html>";
+
+        Integer opcao = JOptionPane.showConfirmDialog(null, mensagem, "Atendimento",
+                JOptionPane.YES_NO_OPTION);
+
+        return (opcao == JOptionPane.YES_OPTION);
+    }
 
     public static List<Categoria> exibirOpcoesAtendimento() throws IllegalArgumentException {
         JCheckBox abertura;
@@ -56,16 +69,31 @@ public abstract class DialogoAtendente {
         return categorias;
     }
 
-    public static Boolean atlzrEstadoDemanda(Demanda demanda) {
-        String mensagem = "<html> A demanda abaixo foi resolvida? " + "<br/>" +
-                "Cliente: " + demanda.getCliente().getNome() + "<br/>" +
-                "Categoria: " + demanda.getCategoria() +
-                "</html>";
+    public static Pessoa getDadosAtendente() throws IllegalArgumentException {
+        JTextField jTextNome = new JTextField();
+        JTextField jTextIdentificacao = new JTextField();
 
-        Integer opcao = JOptionPane.showConfirmDialog(null, mensagem, "Atendimento",
-                JOptionPane.YES_NO_OPTION);
+        Pessoa pessoa;
 
-        return (opcao == JOptionPane.YES_OPTION);
+        Object[] message = {
+                "Nome:", jTextNome,
+                "Identificação:", jTextIdentificacao,
+        };
+
+        int option = JOptionPane.showConfirmDialog(null, message, "Dados do Atendente", JOptionPane.OK_CANCEL_OPTION);
+
+        String nome = jTextNome.getText();
+        String identificacao = jTextIdentificacao.getText();
+
+        if (option == JOptionPane.OK_OPTION && !nome.isEmpty() && !identificacao.isEmpty()) {
+            pessoa = new Pessoa(nome, identificacao);
+
+        } else {
+            throw new IllegalArgumentException();
+
+        }
+
+        return pessoa;
     }
 
 }

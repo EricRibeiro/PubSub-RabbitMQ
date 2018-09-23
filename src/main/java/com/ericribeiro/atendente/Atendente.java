@@ -21,7 +21,7 @@ public class Atendente {
         WorkerAtendente worker = new WorkerAtendente(EXCHANGE_DEMANDAS, EXCHANGE_RESPOSTAS, HOST);
 
         try {
-            Pessoa atendente = Dialogo.getDadosPessoa();
+            Pessoa atendente = DialogoAtendente.getDadosAtendente();
 
             List<Categoria> categorias = DialogoAtendente.exibirOpcoesAtendimento();
 

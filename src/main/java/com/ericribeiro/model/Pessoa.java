@@ -16,7 +16,7 @@ public class Pessoa implements Serializable {
 
     @NonNull
     @Getter @Setter
-    private String celular;
+    private String identificacao;
 
     public String getNmFila() {
         String toString = "";
@@ -26,7 +26,7 @@ public class Pessoa implements Serializable {
             toString += n.toLowerCase() + "_";
         }
 
-        toString += this.celular;
+        toString += this.identificacao;
 
         return toString;
     }
