@@ -1,7 +1,7 @@
 package com.ericribeiro.cliente;
 
-import com.ericribeiro.cliente.dialogo.DialogoCli;
-import com.ericribeiro.cliente.publisher.PubDemandaCli;
+import com.ericribeiro.cliente.dialogo.DialogoCliente;
+import com.ericribeiro.cliente.queue.TaskCliente;
 import com.ericribeiro.helper.Dialogo;
 import com.ericribeiro.model.Pessoa;
 
@@ -10,11 +10,11 @@ public class Main {
     public static void main(String[] argv) {
         try {
             Pessoa pessoa = Dialogo.getDadosPessoa();
-            String opcao = DialogoCli.exibirOpcoesAtendimento();
+            String opcao = DialogoCliente.exibirOpcoesAtendimento();
 
             switch (opcao) {
                 case "NOVA DEMANDA":
-                    PubDemandaCli.abrirDemanda(pessoa);
+                    TaskCliente.abrirDemanda(pessoa);
                     break;
 
                 case "RESPOSTA DE DEMANDAS ANTERIORES":

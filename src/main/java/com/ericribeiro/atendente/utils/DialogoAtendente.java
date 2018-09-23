@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DialogoAtend {
+public abstract class DialogoAtendente {
 
     public static List<Categoria> exibirOpcoesAtendimento() throws IllegalArgumentException {
         JCheckBox abertura;
