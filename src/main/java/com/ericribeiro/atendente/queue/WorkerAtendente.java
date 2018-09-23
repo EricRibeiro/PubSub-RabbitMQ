@@ -1,4 +1,4 @@
-package com.ericribeiro.atendente.conexao;
+package com.ericribeiro.atendente.queue;
 
 import com.ericribeiro.atendente.utils.DialogoAtendente;
 import com.ericribeiro.atendente.utils.LogAtendente;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-public class ConexaoAtendente {
+public class WorkerAtendente {
 
     @Getter @Setter
     private Channel channel;
@@ -34,7 +34,7 @@ public class ConexaoAtendente {
     @Getter @Setter
     private List nmFilas;
 
-    public ConexaoAtendente(String nmExchangeDemandas, String nmExchangeRespostas, String nmHost) {
+    public WorkerAtendente(String nmExchangeDemandas, String nmExchangeRespostas, String nmHost) {
         this.nmExchangeDemandas = nmExchangeDemandas;
         this.nmExchangeRespostas = nmExchangeRespostas;
         this.nmHost = nmHost;
@@ -48,65 +48,7 @@ public class ConexaoAtendente {
         channel = connection.createChannel();
     }
 
-    public void enviarResposta(Demanda mensagem, String nmFilaRespostas)
-            throws IOException {
-
-        channel.basicPublish(this.nmExchangeRespostas, nmFilaRespostas, null,
-                Serializador.convertToBytes(mensagem));
-
-        LogAtendente.imprimirDadosEnvio(mensagem.toString(), this.nmExchangeRespostas, nmFilaRespostas);
-    }
-
-    public void processarDemandas(final Pessoa pessoa) throws IOException {
-        Consumer consumer = new DefaultConsumer(channel) {
-
-            @Override
-            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-
-                try {
-                    Demanda demanda = (Demanda) Serializador.convertFromBytes(body);
-                    demanda.setAtendente(pessoa);
-
-                    LogAtendente.imprimirDadosRecepcao(envelope.getRoutingKey(), demanda.toString());
-
-                    Boolean foiResolvida = DialogoAtendente.atlzrEstadoDemanda(demanda);
-
-                    if (foiResolvida) {
-                        demanda.setFoiResolvida(true);
-                    } else {
-                        demanda.setFoiResolvida(false);
-                    }
-
-                    enviarResposta(demanda, demanda.getCliente().getNmFila());
-
-                } catch (ClassNotFoundException e) {
-                    String mensagem = "Não foi possível processar a demanda.";
-                    Dialogo.exibirMsgErro(mensagem);
-                    e.printStackTrace();
-                    System.exit(400);
-
-                } finally {
-                    Dialogo.exibirMsgInfo("<html>Demanda fechada com sucesso! <br> Clique em <b>'OK'</b> para " +
-                            "continuar" +
-                            " recebendo demandas em segundo " +
-                            "plano.</html>");
-
-                    channel.basicAck(envelope.getDeliveryTag(), false);
-                }
-            }
-        };
-
-        boolean noAck = false;
-
-        for (Object fila : nmFilas) {
-            String nmFila = fila.toString().toLowerCase();
-            channel.basicConsume(nmFila, noAck, consumer);
-        }
-    }
-
-    public void entrarFilaDemandas(List categorias)
-            throws IOException, TimeoutException {
-
+    public void entrarFilaDemandas(List categorias) throws IOException, TimeoutException {
         conectar();
 
         nmFilas = categorias;
@@ -129,4 +71,63 @@ public class ConexaoAtendente {
 
         System.out.println(" [*] Esperando mensagens.");
     }
+
+    public void enviarResposta(Demanda mensagem, String nmFilaRespostas) throws IOException {
+        channel.exchangeDeclare(this.nmExchangeRespostas, BuiltinExchangeType.DIRECT);
+
+        boolean durable = true;
+        channel.queueDeclare(nmFilaRespostas, durable, false, false, null);
+        channel.queueBind(nmFilaRespostas, this.nmExchangeRespostas, nmFilaRespostas);
+
+        channel.basicPublish(this.nmExchangeRespostas, nmFilaRespostas,
+                MessageProperties.PERSISTENT_TEXT_PLAIN,
+                Serializador.convertToBytes(mensagem));
+
+        LogAtendente.imprimirDadosEnvio(mensagem.toString(), this.nmExchangeRespostas, nmFilaRespostas);
+    }
+
+    public void processarDemandas(final Pessoa pessoa) throws IOException {
+        Consumer consumer = new DefaultConsumer(channel) {
+
+            @Override
+            public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+
+                try {
+                    Demanda demanda = (Demanda) Serializador.convertFromBytes(body);
+                    demanda.setAtendente(pessoa);
+
+                    LogAtendente.imprimirDadosRecepcao(envelope.getRoutingKey(), demanda.toString());
+
+                    Boolean foiResolvida = DialogoAtendente.atlzrEstadoDemanda(demanda);
+
+                    demanda.setFoiResolvida(foiResolvida);
+
+                    enviarResposta(demanda, demanda.getCliente().getNmFila());
+
+                } catch (ClassNotFoundException e) {
+                    String mensagem = "Não foi possível processar a demanda.";
+                    Dialogo.exibirMsgErro(mensagem);
+                    e.printStackTrace();
+                    System.exit(400);
+
+                } finally {
+                    channel.basicAck(envelope.getDeliveryTag(), false);
+
+                    Dialogo.exibirMsgInfo("<html>Demanda fechada com sucesso! <br> Clique em <b>'OK'</b> para " +
+                            "continuar" +
+                            " recebendo demandas em segundo " +
+                            "plano.</html>");
+                }
+            }
+        };
+
+        boolean noAck = false;
+
+        for (Object fila : nmFilas) {
+            String nmFila = fila.toString().toLowerCase();
+            channel.basicConsume(nmFila, noAck, consumer);
+        }
+    }
+
+
 }

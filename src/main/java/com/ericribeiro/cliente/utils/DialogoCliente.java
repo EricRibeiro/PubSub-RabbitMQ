@@ -1,10 +1,10 @@
-package com.ericribeiro.cliente.dialogo;
+package com.ericribeiro.cliente.utils;
 
 import com.ericribeiro.model.Categoria;
 
 import javax.swing.*;
 
-public abstract class DialogoCli {
+public abstract class DialogoCliente {
 
     public static String exibirOpcoesAtendimento() throws NullPointerException {
         Object[] opcoes = {"NOVA DEMANDA", "RESPOSTA DE DEMANDAS ANTERIORES"};
@@ -17,7 +17,7 @@ public abstract class DialogoCli {
         return opcao.toString();
     }
 
-    public static String exibirOpcoesDemanda() {
+    public static Categoria exibirOpcoesDemanda() {
         Object[] opcoes = {Categoria.ABERTURA, Categoria.CANCELAMENTO, Categoria.REPARO};
 
         Object opcao = JOptionPane.showInputDialog(null,
@@ -25,7 +25,7 @@ public abstract class DialogoCli {
                 JOptionPane.INFORMATION_MESSAGE, null,
                 opcoes, opcoes[0]);
 
-        return opcao.toString();
+        return (Categoria) opcao;
     }
 
 }

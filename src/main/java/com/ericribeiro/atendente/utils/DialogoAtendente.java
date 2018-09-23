@@ -1,4 +1,4 @@
-package com.ericribeiro.atendente.dialogo;
+package com.ericribeiro.atendente.utils;
 
 import com.ericribeiro.model.Categoria;
 import com.ericribeiro.model.Demanda;
