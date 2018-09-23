@@ -6,9 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="PubSub-RabbitMQ" />
+        <module name="pubsub-rabbitmq" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8" />
+    <bytecodeTargetLevel>
+      <module name="pubsub-rabbitmq" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

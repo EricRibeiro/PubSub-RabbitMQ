@@ -11,13 +11,13 @@ import java.util.List;
 
 public abstract class DialogoAtendente {
 
-    public static Boolean atlzrEstadoDemanda(Demanda demanda) {
-        String mensagem = "<html> A demanda abaixo foi resolvida? " + "<br/>" +
+    public static Boolean atlzrEstadoDemanda(String nmAtendente, Demanda demanda) {
+        String mensagem = "<html>A demanda abaixo foi resolvida? " + "<br/>" +
                 "Cliente: " + demanda.getCliente().getNome() + "<br/>" +
                 "Categoria: " + demanda.getCategoria() +
                 "</html>";
 
-        Integer opcao = JOptionPane.showConfirmDialog(null, mensagem, "Atendimento",
+        Integer opcao = JOptionPane.showConfirmDialog(null, mensagem, nmAtendente,
                 JOptionPane.YES_NO_OPTION);
 
         return (opcao == JOptionPane.YES_OPTION);

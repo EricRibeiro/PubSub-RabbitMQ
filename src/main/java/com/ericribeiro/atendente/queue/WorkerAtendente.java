@@ -99,7 +99,7 @@ public class WorkerAtendente {
 
                     LogAtendente.imprimirDadosRecepcao(envelope.getRoutingKey(), demanda.toString());
 
-                    Boolean foiResolvida = DialogoAtendente.atlzrEstadoDemanda(demanda);
+                    Boolean foiResolvida = DialogoAtendente.atlzrEstadoDemanda(pessoa.getNome(), demanda);
 
                     demanda.setFoiResolvida(foiResolvida);
 
